@@ -31,6 +31,7 @@ yarn-error.*
 # local env files
 .env*.local
 Install requirement packages.md
+Autentikasi firebase dengan react native expo js.odt
 
 # typescript
 *.tsbuildinfo
