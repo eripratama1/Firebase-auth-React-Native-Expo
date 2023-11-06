@@ -1,18 +1,20 @@
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { AntDesign } from '@expo/vector-icons';
 import { signOut } from 'firebase/auth'
-import { firebaseAuth } from '../../config/firebase'
+import { firebaseAuth, firestore } from '../../config/firebase'
 import { destroyKey } from '../../config/localStorage'
 import { Image } from 'expo-image'
+import { doc, getDoc } from 'firebase/firestore';
 
 
-const Home = ({navigation}) => {
+const Home = ({ navigation, route }) => {
 
   // Dalam komponen Home, kita mendefinisikan state isLoading menggunakan useState untuk mengelola status 
   // tampilan ActivityIndicator. Awalnya, isLoading diatur sebagai false danjika bernilai true activity indicator 
   // akan ditampilkan.
   const [isLoading, setIsLoading] = useState(false)
+  const [dataUsers, setDataUsers] = useState([])
 
   // handleLogout adalah fungsi yang dipanggil ketika tombol "Logout" ditekan. 
   // Fungsi ini melakukan beberapa tindakan, termasuk keluar dari sesi autentikasi Firebase dengan signOut, 
@@ -24,6 +26,19 @@ const Home = ({navigation}) => {
       navigation.replace('login')
     })
   }
+
+  const { userId } = route.params
+
+  useEffect(() => {
+    setIsLoading(true)
+    const docRef = doc(firestore, "users", userId)
+    getDoc(docRef).then((doc) => {
+      setDataUsers(doc.data())
+    }).finally(() => {
+      setIsLoading(false)
+    })
+  }, [userId])
+
 
   // Dalam konten halaman Home, Kita menampilkan gambar pengguna, teks, dan daftar elemen Pressable yang 
   // menunjukkan beberapa opsi aksi, seperti "Update Profile" dan "Update Email & Password Auth". 
@@ -38,21 +53,25 @@ const Home = ({navigation}) => {
       ) : (
         <View style={styles.card}>
           <Image
-            source={{ uri: 'https://ui-avatars.com/api/?name=YourName' }}
+            source={{ uri: dataUsers.imageUri ? dataUsers.imageUri : `https://ui-avatars.com/api/?name=${dataUsers.fullname}` }}
             style={styles.userImg}
           />
-          <Text style={{ margin: 18, textAlign: 'center' }}>Dashboard</Text>
+          <Text style={{ margin: 18, textAlign: 'center' }}>Dashboard - {dataUsers.fullname}</Text>
           <View style={styles.cardContent}>
 
             <Pressable
-              
+              onPress={() => navigation.navigate('update-profile', {
+                userId: userId,
+                fullname: dataUsers.fullname,
+                imageUri: dataUsers.imageUri
+              })}
               style={({ pressed }) => [styles.item, pressed && styles.itemPressed]}>
               <Text style={styles.itemText}>Update Profile</Text>
               <AntDesign style={{ marginTop: 4, marginBottom: 4 }} name="rightsquare" size={22} color="black" />
             </Pressable>
 
             <Pressable
-              
+
               style={({ pressed }) => [styles.item, pressed && styles.itemPressed]}>
               <Text style={styles.itemText}>Update Email & Password Auth</Text>
               <AntDesign style={{ marginTop: 4, marginBottom: 4 }} name="rightsquare" size={22} color="black" />

@@ -6,6 +6,7 @@ import Register from '../screens/auth/Register'
 import { NavigationContainer } from '@react-navigation/native'
 import Home from '../screens/users/Home'
 import ResetPassword from '../screens/auth/ResetPassword'
+import UpdateProfile from '../screens/users/UpdateProfile'
 
 // Stack  adalah tumpukan navigator yang digunakan untuk mengelola navigasi di dalam aplikasi ini. 
 // Ini adalah konfigurasi awal untuk stack navigator. dengan mengimpor Modul createStackNavigator kita akan membuat 
@@ -29,6 +30,7 @@ const Routes = () => {
                 <Stack.Screen name='register' component={Register} options={{ headerShown:false }}/>
                 <Stack.Screen name='home' component={Home}/>
                 <Stack.Screen name='reset-password' component={ResetPassword}/>
+                <Stack.Screen name='update-profile' component={UpdateProfile}/>
             </Stack.Navigator>
         </NavigationContainer>
     )
