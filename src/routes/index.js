@@ -7,6 +7,7 @@ import { NavigationContainer } from '@react-navigation/native'
 import Home from '../screens/users/Home'
 import ResetPassword from '../screens/auth/ResetPassword'
 import UpdateProfile from '../screens/users/UpdateProfile'
+import UpdateAuth from '../screens/auth/UpdateAuth'
 
 // Stack  adalah tumpukan navigator yang digunakan untuk mengelola navigasi di dalam aplikasi ini. 
 // Ini adalah konfigurasi awal untuk stack navigator. dengan mengimpor Modul createStackNavigator kita akan membuat 
@@ -26,11 +27,21 @@ const Routes = () => {
     return (
         <NavigationContainer>
             <Stack.Navigator>
-                <Stack.Screen name='login' component={Login} options={{ headerShown:false }} />
-                <Stack.Screen name='register' component={Register} options={{ headerShown:false }}/>
-                <Stack.Screen name='home' component={Home}/>
-                <Stack.Screen name='reset-password' component={ResetPassword}/>
-                <Stack.Screen name='update-profile' component={UpdateProfile}/>
+                <Stack.Screen name='login' component={Login} options={{ headerShown: false }} />
+                <Stack.Screen name='register' component={Register} options={{ headerShown: false }} />
+                <Stack.Screen
+                    name='home'
+                    component={Home}
+                    options={{
+                        headerTintColor: 'white',
+                        headerTitleAlign: 'center',
+                        headerTitle: 'Homepage',
+                        headerStyle: { backgroundColor: '#164da4' }
+                    }}
+                />
+                <Stack.Screen name='reset-password' component={ResetPassword} />
+                <Stack.Screen name='update-profile' component={UpdateProfile} />
+                <Stack.Screen name='update-auth' options={{ headerShown: false }} component={UpdateAuth} />
             </Stack.Navigator>
         </NavigationContainer>
     )

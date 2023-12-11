@@ -25,7 +25,5 @@ export default function App() {
         <Routes />
       </ToastProvider>
     </React.Fragment>
-
-
   );
 }

@@ -6,10 +6,24 @@ import Button from './Button';
 
 const UploadImage = ({ fullname, onImageUpload,imageUri }) => {
 
+    /** 
+     * State yang akan kita gunakan ketika fungsi
+     * UploadImageHandler dijalankan untuk menyimpan hasil dari
+     * fungsi tersebut seperti yang terlihat di bawah ini
+     */
     const [uploadImage, setUploadImage] = useState(null)
 
-    console.log(fullname);
+    // console.log(fullname);
 
+    /**
+     * ini adalah fungsi standar dari expo image picker
+     * disini kita menggunakan Image.launchImageLibraryAsync
+     * untuk mengambil gambar dari smartphone
+     * 
+     * untuk lebih detail silahkan kunjungi link berikut
+     * dokumentasi expo image picker 
+     * https://docs.expo.dev/versions/latest/sdk/imagepicker/
+     */
     async function UploadImageHandler() {
         const result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -22,7 +36,14 @@ const UploadImage = ({ fullname, onImageUpload,imageUri }) => {
         onImageUpload(result.assets[0].uri)
     }
 
-    let imagePreview = <Image style={styles.userImg} source={{ uri: imageUri ? imageUri : `https://ui-avatars.com/api/?name=${fullname}` }} />
+    /**
+     * imagePreview akan menampilkan gambar yang baik yang akan di upload
+     * atau file gambar dari document pada collection (imageUri)
+     * Jika user belum mengupload gambar apapun gunakan link dari ui-avatars
+     * untuk tampilan gambarnya.
+     */
+    let imagePreview = <Image style={styles.userImg} 
+    source={{ uri: imageUri ? imageUri : `https://ui-avatars.com/api/?name=${fullname}` }} />
 
     if (uploadImage) {
         imagePreview = <Image style={styles.userImg} source={{ uri: uploadImage }} />

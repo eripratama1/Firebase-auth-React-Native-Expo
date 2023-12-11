@@ -59,19 +59,39 @@ const Home = ({ navigation, route }) => {
           <Text style={{ margin: 18, textAlign: 'center' }}>Dashboard - {dataUsers.fullname}</Text>
           <View style={styles.cardContent}>
 
+            {/* Disini kita membuat item menu menggunakan komponen pressable react native
+                nantinya setiap menu akan mengarahkan kita ke screen/halaman tertentu untuk melakukan
+                proses update profile, email atau password
+            */}
+
             <Pressable
+            // Ketika elemen update profile ini ditekan, Fungsi navigasi akan dijalankan 
+            // (navigation.navigate) untuk menavigasi ke layar dengan nama 'update-profile' dan mengirim 
+            // beberapa parameter, seperti userId, fullname, dan imageUri.
+            // nilai userId kita dapatkan dari localStorage ketika user melakukan login
+            // dan nilai fullname dan imageUri kita dapatkan dari hasil fetch data ke document yang ada pada
+            // collection users
               onPress={() => navigation.navigate('update-profile', {
                 userId: userId,
                 fullname: dataUsers.fullname,
                 imageUri: dataUsers.imageUri
               })}
+
+              // pada prooperti style kita menambahkan sebuah fungsi untuk mengetahui elemen tersebut 
+              // sedang ditekan atau tidak jika ditekan styles.itemPressed akan ditambahkan jika tidak maka hanya
+              // styles.item saja yang digunakan
               style={({ pressed }) => [styles.item, pressed && styles.itemPressed]}>
               <Text style={styles.itemText}>Update Profile</Text>
               <AntDesign style={{ marginTop: 4, marginBottom: 4 }} name="rightsquare" size={22} color="black" />
             </Pressable>
 
             <Pressable
-
+              onPress={() => navigation.navigate('update-auth', {
+                userId: userId,
+                fullname: dataUsers.fullname,
+                imageUri: dataUsers.imageUri,
+                email:dataUsers.email
+              })}
               style={({ pressed }) => [styles.item, pressed && styles.itemPressed]}>
               <Text style={styles.itemText}>Update Email & Password Auth</Text>
               <AntDesign style={{ marginTop: 4, marginBottom: 4 }} name="rightsquare" size={22} color="black" />
@@ -143,3 +163,18 @@ const styles = StyleSheet.create({
     opacity: 0.7
   }
 })
+
+// import { StyleSheet, Text, View } from 'react-native'
+// import React from 'react'
+
+// const Home = () => {
+//   return (
+//     <View>
+//       <Text>Home</Text>
+//     </View>
+//   )
+// }
+
+// export default Home
+
+// const styles = StyleSheet.create({})
