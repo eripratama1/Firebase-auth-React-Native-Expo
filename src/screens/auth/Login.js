@@ -107,7 +107,7 @@ const Login = () => {
     try {
       const userCredential = await signInWithEmailAndPassword(firebaseAuth, dataLogin.email, dataLogin.password);
       const userId = userCredential.user.uid;
-      const emailVerified = userCredential.user.emailVerified
+      const emailVerified = userCredential.user.email
 
       // Jika email pengguna belum terverifikasi, pesan toast "Email belum terverifikasi" ditampilkan, 
       // dan proses login dihentikan.

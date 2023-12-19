@@ -1,12 +1,12 @@
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { AntDesign } from '@expo/vector-icons';
 import { signOut } from 'firebase/auth'
 import { firebaseAuth, firestore } from '../../config/firebase'
 import { destroyKey } from '../../config/localStorage'
 import { Image } from 'expo-image'
 import { doc, getDoc } from 'firebase/firestore';
-
+import { useIsFocused } from '@react-navigation/native'
 
 const Home = ({ navigation, route }) => {
 
@@ -15,6 +15,7 @@ const Home = ({ navigation, route }) => {
   // akan ditampilkan.
   const [isLoading, setIsLoading] = useState(false)
   const [dataUsers, setDataUsers] = useState([])
+  const isFocused = useIsFocused()
 
   // handleLogout adalah fungsi yang dipanggil ketika tombol "Logout" ditekan. 
   // Fungsi ini melakukan beberapa tindakan, termasuk keluar dari sesi autentikasi Firebase dengan signOut, 
@@ -39,6 +40,12 @@ const Home = ({ navigation, route }) => {
     })
   }, [userId])
 
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerLeft: null
+    })
+  }, [isFocused, userId])
+
 
   // Dalam konten halaman Home, Kita menampilkan gambar pengguna, teks, dan daftar elemen Pressable yang 
   // menunjukkan beberapa opsi aksi, seperti "Update Profile" dan "Update Email & Password Auth". 
@@ -57,6 +64,7 @@ const Home = ({ navigation, route }) => {
             style={styles.userImg}
           />
           <Text style={{ margin: 18, textAlign: 'center' }}>Dashboard - {dataUsers.fullname}</Text>
+          <Text style={{ margin: 18, textAlign: 'center' }}>{dataUsers.email}</Text>
           <View style={styles.cardContent}>
 
             {/* Disini kita membuat item menu menggunakan komponen pressable react native
@@ -65,12 +73,12 @@ const Home = ({ navigation, route }) => {
             */}
 
             <Pressable
-            // Ketika elemen update profile ini ditekan, Fungsi navigasi akan dijalankan 
-            // (navigation.navigate) untuk menavigasi ke layar dengan nama 'update-profile' dan mengirim 
-            // beberapa parameter, seperti userId, fullname, dan imageUri.
-            // nilai userId kita dapatkan dari localStorage ketika user melakukan login
-            // dan nilai fullname dan imageUri kita dapatkan dari hasil fetch data ke document yang ada pada
-            // collection users
+              // Ketika elemen update profile ini ditekan, Fungsi navigasi akan dijalankan 
+              // (navigation.navigate) untuk menavigasi ke layar dengan nama 'update-profile' dan mengirim 
+              // beberapa parameter, seperti userId, fullname, dan imageUri.
+              // nilai userId kita dapatkan dari localStorage ketika user melakukan login
+              // dan nilai fullname dan imageUri kita dapatkan dari hasil fetch data ke document yang ada pada
+              // collection users
               onPress={() => navigation.navigate('update-profile', {
                 userId: userId,
                 fullname: dataUsers.fullname,
@@ -90,7 +98,7 @@ const Home = ({ navigation, route }) => {
                 userId: userId,
                 fullname: dataUsers.fullname,
                 imageUri: dataUsers.imageUri,
-                email:dataUsers.email
+                email: dataUsers.email
               })}
               style={({ pressed }) => [styles.item, pressed && styles.itemPressed]}>
               <Text style={styles.itemText}>Update Email & Password Auth</Text>

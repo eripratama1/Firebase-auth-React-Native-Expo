@@ -39,7 +39,7 @@ const Routes = () => {
                         headerStyle: { backgroundColor: '#164da4' }
                     }}
                 />
-                <Stack.Screen name='reset-password' component={ResetPassword} />
+                <Stack.Screen name='reset-password' component={ResetPassword} options={{ headerShown: false }} />
                 <Stack.Screen name='update-profile' component={UpdateProfile} />
                 <Stack.Screen name='update-auth' options={{ headerShown: false }} component={UpdateAuth} />
             </Stack.Navigator>
