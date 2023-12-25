@@ -1,4 +1,4 @@
-import { KeyboardAvoidingView, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, KeyboardAvoidingView, StyleSheet, Text, View } from 'react-native'
 import React, { useLayoutEffect, useState } from 'react'
 import Input from '../../components/Input'
 import Button from '../../components/Button'
@@ -34,6 +34,10 @@ const UpdatePassword = ({ route, navigation }) => {
     })
   }
 
+  // isLoading: Ini adalah state yang digunakan untuk mengontrol tampilan ActivityIndicator ketika proses login 
+  // sedang berlangsung.
+  const [isLoading, setIsLoading] = useState(false)
+
   const updatePasswordUser = async () => {
     const currentPasswordIsValid = inputs.currentPassword.value.trim() !== ""
     const passwordIsValid = inputs.password.value.trim() !== ""
@@ -53,6 +57,7 @@ const UpdatePassword = ({ route, navigation }) => {
       newPassword: inputs.password.value
     }
 
+    setIsLoading(true)
     try {
       await signInWithEmailAndPassword(firebaseAuth, dataUpdatePassword.email, dataUpdatePassword.currentPassword)
       await updatePassword(firebaseAuth.currentUser, dataUpdatePassword.newPassword)
@@ -94,7 +99,11 @@ const UpdatePassword = ({ route, navigation }) => {
         </View>
 
         <View style={styles.buttonContainer}>
-          <Button onPress={updatePasswordUser}>Update Password</Button>
+          <Button onPress={updatePasswordUser}>
+            {isLoading ? (
+              <ActivityIndicator color="white" size="large" />
+            ) : ("Update password")}
+          </Button>
         </View>
       </KeyboardAvoidingView>
     </View>

@@ -64,7 +64,6 @@ const Home = ({ navigation, route }) => {
             style={styles.userImg}
           />
           <Text style={{ margin: 18, textAlign: 'center' }}>Dashboard - {dataUsers.fullname}</Text>
-          <Text style={{ margin: 18, textAlign: 'center' }}>{dataUsers.email}</Text>
           <View style={styles.cardContent}>
 
             {/* Disini kita membuat item menu menggunakan komponen pressable react native

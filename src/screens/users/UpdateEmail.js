@@ -1,4 +1,4 @@
-import { KeyboardAvoidingView, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, KeyboardAvoidingView, StyleSheet, Text, View } from 'react-native'
 import React, { useLayoutEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import Input from '../../components/Input'
@@ -30,6 +30,10 @@ const UpdateEmail = ({ route, navigation }) => {
     currentPassword: { value: '', isValid: true },
     email: { value: '', isValid: true }
   })
+
+  // isLoading: Ini adalah state yang digunakan untuk mengontrol tampilan ActivityIndicator ketika proses login 
+  // sedang berlangsung.
+  const [isLoading, setIsLoading] = useState(false)
 
   /**
    * Fungsi inputChangeHandler digunakan untuk menghandle perubahan nilai pada input, 
@@ -64,6 +68,9 @@ const UpdateEmail = ({ route, navigation }) => {
     })
   }, [])
 
+  /** Jika menggunakan method updateEmail mengalami kendala atau error 
+   * bisa menggunakan method verifyBeforeUpdateEmail dibawah ini
+   */
   /** Update email authentication with method verifyBeforeUpdateEmail */
 
   const updateEmailUser = async () => {
@@ -101,12 +108,14 @@ const UpdateEmail = ({ route, navigation }) => {
 
       /**Nilai newMail didapat dari state email */
       // newMail: inputs.email.value
-      newMail:inputs.email.value
+      newMail: inputs.email.value
     }
 
     console.log("Result data update email", dataUpdateEmail);
     /**Membuar referensi ke collection users berdasaarkan userId pengguna(user) yang login */
     const colRef = doc(firestore, "users", userId)
+
+    setIsLoading(true)
 
     try {
       /** Ambil snapshot dokumen users */
@@ -144,10 +153,10 @@ const UpdateEmail = ({ route, navigation }) => {
       Toast.show('error', { duration: 3000, placement: 'bottom', type: 'danger', data: errMessage })
     }
   }
-  
+
   /** Update email authentication with method verifyBeforeUpdateEmail */
 
-  
+
   /** Update email authentication with method udpateEmail */
 
   // const updateEmailUser = async () => {
@@ -192,6 +201,7 @@ const UpdateEmail = ({ route, navigation }) => {
   //   /**Membuar referensi ke collection users berdasaarkan userId pengguna(user) yang login */
   //   const colRef = doc(firestore, "users", userId)
 
+  //   setIsLoading(true)
   //   try {
   //     /** Ambil snapshot dokumen users */
   //     const querySnapshot = await getDoc(colRef)
@@ -235,9 +245,9 @@ const UpdateEmail = ({ route, navigation }) => {
   //     Toast.show('error', { duration: 3000, placement: 'bottom', type: 'danger', data: errMessage })
   //   }
   // }
-  
+
   /** Update email authentication with method udpateEmail */
- 
+
   return (
     <View style={styles.rootContainer}>
       <KeyboardAvoidingView
@@ -287,7 +297,11 @@ const UpdateEmail = ({ route, navigation }) => {
         </View>
 
         <View style={styles.buttonContainer}>
-          <Button onPress={updateEmailUser}>Update Email</Button>
+          <Button onPress={updateEmailUser}>
+            {isLoading ? (
+              <ActivityIndicator color="white" size="large"/>
+            ): ('Update email')}
+          </Button>
         </View>
       </KeyboardAvoidingView>
     </View>

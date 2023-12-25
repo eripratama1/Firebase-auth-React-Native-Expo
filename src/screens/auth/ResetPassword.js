@@ -8,11 +8,19 @@ import { firebaseAuth } from '../../config/firebase'
 
 const ResetPassword = ({ navigation }) => {
 
+  // Dalam komponen ResetPassword, kita mendefinisikan sebuah state :
+  // inputs: state yang digunakan untuk menyimpan data input, yaitu email. 
+  // Setiap input memiliki nilai (value) dan status validitas (isValid).
   const [inputs, setInputs] = useState({
     email: { value: '', isValid: true }
   })
+
+  // isLoading: Ini adalah state yang digunakan untuk mengontrol tampilan ActivityIndicator ketika proses login 
+  // sedang berlangsung.
   const [isLoading, setIsLoading] = useState(false)
 
+  // fungsi inputChangeHandler adalah fungsi yang digunakan untuk mengubah nilai input dalam state inputs ketika 
+  // pengguna memasukkan teks. Ini digunakan sebagai callback untuk komponen Input.
   const inputChangeHandler = (inputIdentifier, enteredValue) => {
     setInputs((currentInputs) => {
       return {
@@ -22,17 +30,35 @@ const ResetPassword = ({ navigation }) => {
     })
   }
 
+  // handleLogin mengarahkan pengguna (users) ke halaman / screen login
   const handleLogin = () => {
     navigation.replace('login')
   }
 
+  /**
+   * handleResetPassword fungsi yang dipanggil ketika tombol "Reset password" ditekan. 
+   * Fungsi ini melakukan validasi input, jika berhasil akan mengirimkan email reset passsword ke 
+   * pengguna (user) dan jika terjadi kesalahan tampilkan pesan error dalam bentuk toast
+   */
   const handleResetPassword = async () => {
+
+    /**
+     * mendefinisikan objek dataResetPassword yang berisi email yang diambil dari state inputs. 
+       Ini digunakan untuk menyimpan data email user yang ingin melakukan reset password.
+     */
     const dataResetPassword = {
       email: inputs.email.value
     }
 
+    // Melakukan validasi untuk memeriksa apakah email yang dimasukkan oleh pengguna valid. 
+    // Validasi ini dilakukan dengan memeriksa apakah input tersebut tidak kosong.
     const emailIsValid = inputs.email.value.trim() !== ''
 
+    /**
+    * Jika input tidak valid, kita mengatur status validitas (isValid) di state inputs sesuai 
+    dengan hasil validasi dan menampilkan pesan toast yang memberi tahu pengguna untuk memeriksa input mereka. 
+    Pesan toast ini akan muncul selama 3 detik di bagian bawah layar.
+     */
     if (!emailIsValid) {
       setInputs((currentInputs) => ({
         email: { value: currentInputs.email.value, isValid: emailIsValid }
@@ -47,6 +73,9 @@ const ResetPassword = ({ navigation }) => {
 
     setIsLoading(true)
 
+    /**
+     * Selanjutnya, kita akan mengirimkan email reset password ke pengguna (users).
+     */
     try {
       await sendPasswordResetEmail(firebaseAuth, dataResetPassword.email)
       Toast.show('email reset has been sent, check your inbox', {

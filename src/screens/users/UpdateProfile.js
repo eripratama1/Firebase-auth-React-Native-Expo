@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from 'react-native'
 import React, { useLayoutEffect, useState } from 'react'
 import { doc, getDoc, updateDoc } from 'firebase/firestore'
 import { firestore, storage } from '../../config/firebase'
@@ -23,6 +23,10 @@ const UpdateProfile = ({ route, navigation }) => {
       value: '', isValid: true
     }
   })
+
+  // isLoading: Ini adalah state yang digunakan untuk mengontrol tampilan ActivityIndicator ketika proses login 
+  // sedang berlangsung.
+  const [isLoading, setIsLoading] = useState(false)
 
   // Fungsi yang dipanggil ketika nilai input berubah (onChange)
   const inputChangeHandler = (inputIdentifier, enteredValue) => {
@@ -61,18 +65,19 @@ const UpdateProfile = ({ route, navigation }) => {
 
     if (!selectedImage) {
 
-    /**
-     * Mengkakses data document berdasarkan userId user yang login
-     * lalu pada object dataUpdate nilai untuk fullname kita menggunakan ternary operator
-     * dimana kita akan menggunakan nilai dari state inputs
-     * jika user mengubah nilai yang ada pada state tersebut dan jika tidak gunakan nilai awal yang 
-     * di dapat dari route.params.fullname     * 
-     */
+      /**
+       * Mengkakses data document berdasarkan userId user yang login
+       * lalu pada object dataUpdate nilai untuk fullname kita menggunakan ternary operator
+       * dimana kita akan menggunakan nilai dari state inputs
+       * jika user mengubah nilai yang ada pada state tersebut dan jika tidak gunakan nilai awal yang 
+       * di dapat dari route.params.fullname     * 
+       */
       const colRef = doc(firestore, "users", userId);
       const dataUpdate = {
         fullname: inputs.fullname.value ? inputs.fullname.value : route.params.fullname
       };
 
+      setIsLoading(true)
       /**
        * Kemudian jalankan proses updateDoc jika berhasil atau gagal tampilkan toast sesuai
        * yang telah didefinisikan berikut. Lalu redirect kembali ke halaman/screen Homr
@@ -134,6 +139,7 @@ const UpdateProfile = ({ route, navigation }) => {
             }
           }
 
+          setIsLoading(true)
           /**
            * Mengatur lokasi penyimpanan dan nama dari file gambar yang di upload ke storage
            * unutk penamaan gambarnya menggunakan fungsi date dari javascript
@@ -240,7 +246,11 @@ const UpdateProfile = ({ route, navigation }) => {
         </View>
 
         <View style={{ flex: 1, justifyContent: 'flex-end', alignItems: 'center', marginBottom: 20, width: '100%' }}>
-          <Button onPress={handleUpdateData} backgroundColor="#ffc300">Update Profile</Button>
+          <Button onPress={handleUpdateData} backgroundColor="#ffc300">
+            {isLoading ? (
+              <ActivityIndicator color="white" size="large" />
+            ) : ("Update profile")}
+          </Button>
         </View>
       </ScrollView>
     </View>
