@@ -3,7 +3,7 @@ import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { AntDesign } from '@expo/vector-icons';
 import { signOut } from 'firebase/auth'
 import { firebaseAuth, firestore } from '../../config/firebase'
-import { destroyKey } from '../../config/localStorage'
+import { destroyKey, getKey } from '../../config/localStorage'
 import { Image } from 'expo-image'
 import { doc, getDoc } from 'firebase/firestore';
 import { useIsFocused } from '@react-navigation/native'
@@ -29,7 +29,7 @@ const Home = ({ navigation, route }) => {
   }
 
   const { userId } = route.params
-
+  
   useEffect(() => {
     setIsLoading(true)
     const docRef = doc(firestore, "users", userId)
