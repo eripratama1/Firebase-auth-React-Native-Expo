@@ -148,9 +148,10 @@ const UpdateEmail = ({ route, navigation }) => {
       navigation.replace('login')
     } catch (error) {
 
-      /** Jika terjasi kesalahan tampilkan pesan error menggunakan toast */
+      /** Jika terjadi kesalahan tampilkan pesan error menggunakan toast */
       const errMessage = error.message
       Toast.show('error', { duration: 3000, placement: 'bottom', type: 'danger', data: errMessage })
+      setIsLoading(false)
     }
   }
 

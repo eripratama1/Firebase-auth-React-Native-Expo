@@ -39,9 +39,11 @@ const UpdatePassword = ({ route, navigation }) => {
   const [isLoading, setIsLoading] = useState(false)
 
   const updatePasswordUser = async () => {
+     // Memeriksa apakah nilai input password saat ini dan password baru tidak kosong
     const currentPasswordIsValid = inputs.currentPassword.value.trim() !== ""
     const passwordIsValid = inputs.password.value.trim() !== ""
 
+    // Jika salah satu input tidak valid, perbarui state dan tampilkan pesan error
     if (!currentPasswordIsValid || !passwordIsValid) {
       setInputs((currentInputs) => ({
         currentPassword: { value: currentInputs.currentPassword.value, isValid: currentPasswordIsValid },
@@ -51,23 +53,41 @@ const UpdatePassword = ({ route, navigation }) => {
       return
     }
 
+    // Persiapan data untuk pembaruan password
     const dataUpdatePassword = {
       currentPassword: inputs.currentPassword.value,
       email: currentEmail,
       newPassword: inputs.password.value
     }
+    console.log(dataUpdatePassword);
 
+    // Menampilkan loading ketika tombol update password di klik
     setIsLoading(true)
+
     try {
+      // Login dengan email dan password saat ini (Reauthenticated)
       await signInWithEmailAndPassword(firebaseAuth, dataUpdatePassword.email, dataUpdatePassword.currentPassword)
+
+      // JIka proses login berhasil update password authentication
       await updatePassword(firebaseAuth.currentUser, dataUpdatePassword.newPassword)
 
+      // Lalu tampilkan pesan success dengan Toast
       Toast.show("Password updated", { duration: 3000, placement: 'bottom', type: 'success' })
+
+      // Jalankan proses signout
       await signOut(firebaseAuth)
+      
+      // hapus key yang disimpan pada storage
       destroyKey()
+
+      // Redirect kembali ke halaman login
       navigation.replace('login')
     } catch (error) {
-      Toast.show("Error", { duration: 3000, placement: 'bottom', type: 'danger' })
+
+      // Jika terjadi error tampilkan pesan berikut
+      console.log(error);
+      Toast.show("Error update", { duration: 3000, placement: 'bottom', type: 'danger'})
+      setIsLoading(false)
     }
   }
 
