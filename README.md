@@ -1,6 +1,6 @@
 ### React Native expo (js) & Firebase Authentication
 
-- Klon atau download project ini
+- Clone atau download project ini
 - Setelah selesai download ataupun klon project ini buka project pada text editor lalu jalankan command ini untuk instalasi package yang diperlukan :
 
 ```javascript
